@@ -12,6 +12,7 @@ router.register(r'update', BoardUpdateViewSet)
 router.register(r'delete', BoardDestroyViewSet)
 router.register(r'ideas/create', IdeaCreateViewSet)
 router.register(r'ideas/retrieve', IdeaRetrieveViewSet)
+router.register(r'ideas/list', IdeaListViewSet)
 router.register(r'ideas/update', IdeaUpdateViewSet)
 router.register(r'ideas/delete', BoardDestroyViewSet)
 

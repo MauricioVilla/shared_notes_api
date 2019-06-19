@@ -5,7 +5,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import mixins, views, viewsets
 
 from shared_notes.applications.boards.models import Board, Idea
-from shared_notes.applications.boards.serializers import BoardCreateSerializer, IdeaCreateSerializer
+from shared_notes.applications.boards.serializers import *
+
 
 ### Boards
 class BoardCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
@@ -24,8 +25,8 @@ class BoardListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     permission_classes = (IsAuthenticated,)
     queryset = Board.objects.all()
-    serializer_class = BoardCreateSerializer
-    filter_fields = ('created_by',)
+    serializer_class = BoardReadSerializer
+    filter_fields = ('author',)
 
 
 class BoardUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -62,7 +63,15 @@ class IdeaRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     """
     permission_classes = (IsAuthenticated,)
     queryset = Idea.objects.all()
-    serializer_class = IdeaCreateSerializer
+    serializer_class = IdeaReadSerializer
+
+
+class IdeaListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    """
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Idea.objects.all()
+    serializer_class = IdeaReadSerializer
 
 
 class IdeaUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
