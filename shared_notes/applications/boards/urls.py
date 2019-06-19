@@ -6,12 +6,16 @@ from rest_framework import routers
 from shared_notes.applications.boards.views import *
 
 router = routers.SimpleRouter()
-router.register(r'', BoardViewSet)
-router.register(r'idea', IdeaViewSet)
-# router.register(r'ideas', IdeaModelViewSet)
-# router.register(r'ideas/approve', IdeaModelViewSet)
+router.register(r'create', BoardCreateViewSet)
+router.register(r'list', BoardListViewSet)
+router.register(r'update', BoardUpdateViewSet)
+router.register(r'delete', BoardDestroyViewSet)
+router.register(r'ideas/create', IdeaCreateViewSet)
+router.register(r'ideas/retrieve', IdeaRetrieveViewSet)
+router.register(r'ideas/update', IdeaUpdateViewSet)
+router.register(r'ideas/delete', BoardDestroyViewSet)
 
 urlpatterns = [
-    # path('get_boards/', GetBoardIdeas.as_view(), name='boards.get'),
-    # path('approve_idea/', approve_idea, name='ideas.approve')
+    path('get_boards/', SearchBoard.as_view(), name='boards.get'),
+    # path('ideas/approve/', approve_idea, name='ideas.approve')
 ] + router.urls

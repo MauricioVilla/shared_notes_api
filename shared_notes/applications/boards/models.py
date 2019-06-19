@@ -45,10 +45,9 @@ class Board(TimeStampedModel):
 
 class Idea(TimeStampedModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    board = models.ForeignKey(Board, null=False, blank=False, on_delete=models.CASCADE)
+    board = models.ForeignKey(Board, null=False, blank=False, on_delete=models.CASCADE, related_name='ideas')
     description = models.TextField(max_length=500, null=False, blank=False, )
     approved = models.CharField(choices=YES_NO_CHOICES, null=False, blank=False, max_length=2)
-    type = models.CharField(choices=PUBLIC_PRIVATE_CHOICES, max_length=30, null=False, blank=False)
     created_by = models.ForeignKey(User, null=True, blank=False, related_name='idea_created_by', on_delete=models.PROTECT)
     updated_by = models.ForeignKey(User, null=True, blank=True, related_name='idea_updated_by', on_delete=models.PROTECT)
 

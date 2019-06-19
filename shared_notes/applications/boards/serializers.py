@@ -6,9 +6,11 @@ from .models import Board, Idea
 class BoardCreateSerializer(serializers.ModelSerializer):
     """
     """
+    ideas = serializers.StringRelatedField(many=True, read_only=True)
+
     class Meta:
         model = Board
-        fields = ('id', 'title', 'description', 'type', 'created_by')
+        fields = ('id', 'title', 'description', 'type', 'ideas', 'created_by')
 
 
 class IdeaCreateSerializer(serializers.ModelSerializer):

@@ -7,49 +7,82 @@ from rest_framework import mixins, views, viewsets
 from shared_notes.applications.boards.models import Board, Idea
 from shared_notes.applications.boards.serializers import BoardCreateSerializer, IdeaCreateSerializer
 
+### Boards
+class BoardCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    """
+    create: ViewSet for creation of boards associated with an user.
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Board.objects.all()
+    serializer_class = BoardCreateSerializer
+    http_method_names = ['post']
 
-class BoardViewSet(mixins.ListModelMixin,
-                   mixins.CreateModelMixin,
-                   mixins.UpdateModelMixin,
-                   mixins.DestroyModelMixin,
-                   mixins.RetrieveModelMixin,
-                   viewsets.GenericViewSet):
+
+class BoardListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     """
     list: ViewSet for get all the boards of an user filtering by creator
-    create: ViewSet for creation of boards associated with an user.
-    retrieve: ViewSet for get boards by id
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Board.objects.all()
+    serializer_class = BoardCreateSerializer
+    filter_fields = ('created_by',)
+
+
+class BoardUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
     update: ViewSet for update boards by id
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Board.objects.all()
+    serializer_class = BoardCreateSerializer
+    http_method_names = ['put']
+
+
+class BoardDestroyViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """
     destroy: ViewSet for delete boards by id
     """
     permission_classes = (IsAuthenticated,)
     queryset = Board.objects.all()
     serializer_class = BoardCreateSerializer
-    http_method_names = ['get', 'put', 'delete', 'post']
-    filter_fields = ('created_by__id',)
 
 
-class IdeaViewSet(mixins.ListModelMixin,
-                  mixins.CreateModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  mixins.RetrieveModelMixin,
-                  viewsets.GenericViewSet):
+### Ideas
+
+class IdeaCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     """
-    list: ViewSet for get all the ideas of an board filtering by id board
-    create: ViewSet for creation of ideas associated with an board.
-    retrieve: ViewSet for get ideas by id
-    update: ViewSet for update ideas by id
-    destroy: ViewSet for delete ideas by id
     """
     permission_classes = (IsAuthenticated,)
     queryset = Idea.objects.all()
     serializer_class = IdeaCreateSerializer
-    lookup_field = 'board__id'
-    filter_fields = ('created_by__id',)
-    http_method_names = ['get', 'put', 'delete', 'post']
 
 
-class GetIdeasBoard(views.APIView):
+class IdeaRetrieveViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+    """
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Idea.objects.all()
+    serializer_class = IdeaCreateSerializer
+
+
+class IdeaUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
+    """
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Idea.objects.all()
+    serializer_class = IdeaCreateSerializer
+    http_method_names = ['put']
+
+
+class IdeaDestroyViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
+    """
+    """
+    permission_classes = (IsAuthenticated,)
+    queryset = Idea.objects.all()
+    serializer_class = IdeaCreateSerializer
+
+
+class SearchBoard(views.APIView):
     """
     """
     permission_classes = (IsAuthenticated,)
