@@ -7,9 +7,7 @@ from shared_notes.applications.boards.views import *
 
 router = routers.SimpleRouter()
 router.register(r'', BoardViewSet)
-router.register(r'', BoardCreateViewSet)
 router.register(r'idea', IdeaViewSet)
-router.register(r'idea', IdeaCreateViewSet)
 # router.register(r'ideas', IdeaModelViewSet)
 # router.register(r'ideas/approve', IdeaModelViewSet)
 

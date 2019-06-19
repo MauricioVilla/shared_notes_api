@@ -9,12 +9,14 @@ from shared_notes.applications.boards.serializers import BoardCreateSerializer, 
 
 
 class BoardViewSet(mixins.ListModelMixin,
+                   mixins.CreateModelMixin,
                    mixins.UpdateModelMixin,
                    mixins.DestroyModelMixin,
                    mixins.RetrieveModelMixin,
                    viewsets.GenericViewSet):
     """
     list: ViewSet for get all the boards of an user filtering by creator
+    create: ViewSet for creation of boards associated with an user.
     retrieve: ViewSet for get boards by id
     update: ViewSet for update boards by id
     destroy: ViewSet for delete boards by id
@@ -22,18 +24,8 @@ class BoardViewSet(mixins.ListModelMixin,
     permission_classes = (IsAuthenticated,)
     queryset = Board.objects.all()
     serializer_class = BoardCreateSerializer
-    http_method_names = ['get', 'put', 'delete']
+    http_method_names = ['get', 'put', 'delete', 'post']
     filter_fields = ('created_by__id',)
-
-
-class BoardCreateViewSet(mixins.CreateModelMixin,
-                         viewsets.GenericViewSet):
-    """
-    create: ViewSet for creation of boards associated with an user.
-    """
-    permission_classes = (IsAuthenticated,)
-    queryset = Board.objects.all()
-    serializer_class = BoardCreateSerializer
 
 
 class IdeaViewSet(mixins.ListModelMixin,
@@ -44,6 +36,7 @@ class IdeaViewSet(mixins.ListModelMixin,
                   viewsets.GenericViewSet):
     """
     list: ViewSet for get all the ideas of an board filtering by id board
+    create: ViewSet for creation of ideas associated with an board.
     retrieve: ViewSet for get ideas by id
     update: ViewSet for update ideas by id
     destroy: ViewSet for delete ideas by id
@@ -53,17 +46,7 @@ class IdeaViewSet(mixins.ListModelMixin,
     serializer_class = IdeaCreateSerializer
     lookup_field = 'board__id'
     filter_fields = ('created_by__id',)
-    http_method_names = ['get', 'put', 'delete']
-
-
-class IdeaCreateViewSet(mixins.CreateModelMixin,
-                        viewsets.GenericViewSet):
-    """
-    create: ViewSet for creation of ideas associated with an board.
-    """
-    permission_classes = (IsAuthenticated,)
-    queryset = Idea.objects.all()
-    serializer_class = IdeaCreateSerializer
+    http_method_names = ['get', 'put', 'delete', 'post']
 
 
 class GetIdeasBoard(views.APIView):
