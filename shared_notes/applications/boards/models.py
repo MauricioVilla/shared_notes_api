@@ -5,12 +5,12 @@ from shared_notes.applications.users.models import User
 
 
 PUBLIC_PRIVATE_CHOICES = (
-    ('Private', 'Privado'),
-    ('Public', 'Publico'),
+    ('Privado', 'Privado'),
+    ('Publico', 'Publico'),
 )
 
 YES_NO_CHOICES = (
-    ('Yes', 'Yes'),
+    ('Si', 'Yes'),
     ('No', 'No'),
 )
 
