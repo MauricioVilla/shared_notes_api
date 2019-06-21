@@ -1,8 +1,8 @@
 # -*- encoding: utf-8 -*-
+from django.db.models import Q
 
-from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import mixins, views, viewsets
+from rest_framework import generics, mixins, views, viewsets
 
 from shared_notes.applications.boards.models import Board, Idea
 from shared_notes.applications.boards.serializers import *
@@ -19,14 +19,16 @@ class BoardCreateViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     http_method_names = ['post']
 
 
-class BoardListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    """
-    list: ViewSet for get all the boards of an user filtering by creator
-    """
-    permission_classes = (IsAuthenticated,)
-    queryset = Board.objects.all()
+class BoardListAPIView(generics.ListAPIView):
     serializer_class = BoardReadSerializer
-    filter_fields = ('author',)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Board.objects.all()
+        author = self.request.query_params.get('author', None)
+        if author is not None:
+            queryset = queryset.filter(author=author)
+        return queryset
 
 
 class BoardUpdateViewSet(mixins.UpdateModelMixin, viewsets.GenericViewSet):
@@ -46,6 +48,18 @@ class BoardDestroyViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Board.objects.all()
     serializer_class = BoardCreateSerializer
+
+
+class SearchBoardsAPIView(generics.ListAPIView):
+    serializer_class = BoardReadSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Board.objects.all()
+        params = self.request.query_params.get('params', None)
+        if params is not None:
+            queryset = queryset.filter(Q(author__icontains=params) | Q(title__icontains=params))
+        return queryset
 
 
 ### Ideas
@@ -89,57 +103,3 @@ class IdeaDestroyViewSet(mixins.DestroyModelMixin, viewsets.GenericViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Idea.objects.all()
     serializer_class = IdeaCreateSerializer
-
-
-class SearchBoard(views.APIView):
-    """
-    """
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        title = request.GET.get('title')
-        boards = self.get_boards(title)
-        ideas = self.get_ideas()
-        response = [boards, ideas]
-        return Response(response)
-
-    def get_boards(self, title):
-        if title and title != 'undefined':
-            boards = Board.objects.filter(title__contains=title).all()
-        else:
-            boards = Board.objects.all()
-        if boards == None:
-            return Response(status=404)
-        boards_serializer = BoardCreateSerializer(boards, many=True)
-        return boards_serializer.data
-
-    def get_ideas(self):
-        ideas = Idea.objects.all()
-        ideas_serializer = IdeaCreateSerializer(ideas, many=True)
-        return ideas_serializer.data
-
-
-def approve_idea(request):
-    """
-    :param request:
-    :return:Json
-    """
-    import json
-    from django.http import HttpResponse
-    default_content_type = 'application/json; charset=UTF-8'
-    try:
-        id = request.GET.get('id')
-        if not id:
-            raise Exception("id requerido...")
-        idea = Idea.objects.get(id=id)
-        idea.approved = 'SI'
-        idea.save()
-        return HttpResponse(json.dumps({
-                             'success': True,
-                             'result': idea
-                         }), content_type=default_content_type)
-    except Exception as e:
-        return HttpResponse(json.dumps({
-            'success': False,
-            'errors': e.args
-        }), content_type=default_content_type)
