@@ -10,7 +10,7 @@ PUBLIC_PRIVATE_CHOICES = (
 )
 
 YES_NO_CHOICES = (
-    ('Si', 'Yes'),
+    ('Si', 'Si'),
     ('No', 'No'),
 )
 

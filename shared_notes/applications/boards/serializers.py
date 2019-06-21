@@ -12,7 +12,7 @@ class BoardReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ('id', 'title', 'description', 'type', 'ideas', 'created_by')
+        fields = ('id', 'title', 'description', 'type', 'author', 'ideas', 'created_by')
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
